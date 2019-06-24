@@ -1,0 +1,38 @@
+{
+    "manifest_version": 2,
+    "name": "muteResult",
+    "version": "0.0.0.2",
+
+    "description": "mute results of google search",
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+
+    "permissions": [
+        "contextMenus"
+    ],
+
+    "browser_action": {
+        "default_icon": {
+            "19": "icon19.png"
+        },
+        "default_title": "muteResult",
+        "default_popup": "popup.html"
+    },
+
+    "content_scripts": [
+        {
+            "matches": [ "https://www.google.com/search*" ],
+            "js": [ "mute.js" ]
+        }
+    ],
+
+    "background": {
+        "scripts": [ "background.js" ],
+        "persistent": false
+    },
+
+    "options_page": "options.html"
+}
