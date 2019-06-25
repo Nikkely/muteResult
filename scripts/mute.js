@@ -1,12 +1,18 @@
 
 function mute() {
-  console.log('mute');
   var searchResultDiv = document.getElementsByClassName('g');
   Array.prototype.forEach.call(searchResultDiv, function(item) {
-    item.parentNode.removeChild(item);
+    result = item.getElementsByTagName('a')[0].href
+    if (muteList[result] != undefined) {
+      item.parentNode.removeChild(item);
+    }
   });
 }
 
+var muteList = {}
+chrome.storage.sync.get(null, function(item) {
+  muteList = item
+})
 
 var observer = new MutationObserver(mute);
 
