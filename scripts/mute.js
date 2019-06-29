@@ -1,29 +1,36 @@
 function filterResult(muteList) {
-    var searchResultDiv = document.getElementsByClassName('g')
+    const startTime = performance.now()
+    let searchResultDiv = document.getElementsByClassName('g')
     Array.prototype.forEach.call(searchResultDiv, function (element) {
-      targetUrl = element.getElementsByTagName('a')[0].href
-      if (muteList[targetUrl] != undefined) {
-        element.parentNode.removeChild(muteList)
+      let targetUrl = element.getElementsByTagName('a')[0].href
+      let targetDomain = targetUrl.match(/^https?:\/\/(.*?)(\/|\?|#|$)/)[1]
+      if (muteList[targetDomain] != undefined) {
+        // element.parentNode.removeChild(element)
+        element.parentNode.style.display = 'none'
       }
     })
+  const endTime = performance.now()
+  console.log("filtering: " + (endTime - startTime) + "ms");
 }
 
-var muteList = null
+var gMuteList = null
 
-var observer = new MutationObserver(function () {
-  if (muteList == null) {
-    chrome.storage.sync.get(null, function (muteList) {
-      muteList = muteList
-      filterResult(muteList)
-    })
-  } else {
-    filterResult(muteList)
-  }
+document.addEventListener("DOMContentLoaded", function (e) {
+  var observer = new MutationObserver(function () {
+    if (gMuteList == null) {
+      chrome.storage.sync.get(null, function (muteList) {
+        gMuteList = muteList
+        filterResult(muteList)
+      })
+    } else {
+      filterResult(gMuteList)
+    }
+  })
+
+  observer.observe(document.getElementById('ires'), {
+    // attributes: true,
+    // characterData: true,
+    childList: true,
+    subtree: true
+  });
 })
-
-observer.observe(document.getElementById('ires'), {
-  attributes: true,
-  characterData: true,
-  childList: true,
-  subtree: true
-});
