@@ -1,20 +1,25 @@
-
-function mute() {
-  var searchResultDiv = document.getElementsByClassName('g');
-  Array.prototype.forEach.call(searchResultDiv, function(item) {
-    result = item.getElementsByTagName('a')[0].href
-    if (muteList[result] != undefined) {
-      item.parentNode.removeChild(item);
-    }
-  });
+function filterResult(muteList) {
+    var searchResultDiv = document.getElementsByClassName('g')
+    Array.prototype.forEach.call(searchResultDiv, function (element) {
+      targetUrl = element.getElementsByTagName('a')[0].href
+      if (muteList[targetUrl] != undefined) {
+        element.parentNode.removeChild(muteList)
+      }
+    })
 }
 
-var muteList = {}
-chrome.storage.sync.get(null, function(item) {
-  muteList = item
-})
+var muteList = null
 
-var observer = new MutationObserver(mute);
+var observer = new MutationObserver(function () {
+  if (muteList == null) {
+    chrome.storage.sync.get(null, function (muteList) {
+      muteList = muteList
+      filterResult(muteList)
+    })
+  } else {
+    filterResult(muteList)
+  }
+})
 
 observer.observe(document.getElementById('ires'), {
   attributes: true,
