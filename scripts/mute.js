@@ -5,8 +5,9 @@ function filterResult(muteList) {
       let targetUrl = element.getElementsByTagName('a')[0].href
       let targetDomain = targetUrl.match(/^https?:\/\/(.*?)(\/|\?|#|$)/)[1]
       if (muteList[targetDomain] != undefined) {
+        console.log('muted: ' + targetDomain);
         // element.parentNode.removeChild(element)
-        element.parentNode.style.display = 'none'
+        element.style.display = 'none'
       }
     })
   const endTime = performance.now()
