@@ -15,23 +15,44 @@ function filterResult(muteList) {
 }
 
 var gMuteList = null
+chrome.storage.sync.get(null, function (muteList) {
+  gMuteList = muteList
+});
 
-document.addEventListener("DOMContentLoaded", function (e) {
-  var observer = new MutationObserver(function () {
-    if (gMuteList == null) {
-      chrome.storage.sync.get(null, function (muteList) {
-        gMuteList = muteList
-        filterResult(muteList)
-      })
-    } else {
-      filterResult(gMuteList)
-    }
-  })
+(new MutationObserver(function () {
+  if (gMuteList == null) {
+    chrome.storage.sync.get(null, function (muteList) {
+      gMuteList = muteList
+      filterResult(muteList)
+    })
+  } else {
+    console.log('use cache');
+    filterResult(gMuteList)
+  }
+})).observe(document.documentElement, {
+  // attributes: true,
+  // characterData: true,
+  childList: true,
+  subtree: true
+});
 
-  observer.observe(document.getElementById('ires'), {
-    // attributes: true,
-    // characterData: true,
-    childList: true,
-    subtree: true
-  });
-})
+// document.addEventListener("DOMContentLoaded", function (e) {
+//   var observer = new MutationObserver(function () {
+//     if (gMuteList == null) {
+//       chrome.storage.sync.get(null, function (muteList) {
+//         gMuteList = muteList
+//         filterResult(muteList)
+//       })
+//     } else {
+//       console.log('use cache');
+//       filterResult(gMuteList)
+//     }
+//   })
+//
+//   observer.observe(document.documentElement, {
+//     // attributes: true,
+//     // characterData: true,
+//     childList: true,
+//     subtree: true
+//   });
+// })
