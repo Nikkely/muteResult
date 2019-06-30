@@ -10,11 +10,15 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'このドメインをミュートする',
     id: 'domainMute',
     type: 'normal',
-    contexts: ["link"]
+    contexts: ["all"]
   });
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
+  let targetUrl = info.linkUrl
+  if (info.linkUrl === undefined) {
+    targetUrl = tab.url
+  }
   // if (info.menuItemId === 'pageMute') {
   //   var register = {};
   //   register[info.linkUrl] = -1;
@@ -24,10 +28,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   //   });
   // }
   if (info.menuItemId == 'domainMute') {
-    const domain = info.linkUrl.match(/^https?:\/\/(.*?)(\/|\?|#|$)/)[1]
+    const domain = extractDomain(targetUrl)
+    if (domain === null) {
+      return
+    }
     var obje = {}
     obje[domain] = -1
-    chrome.storage.sync.set(obje, () => {
+    setMuteList(obje, () => {
       console.log('muted:' + domain)
     })
   }

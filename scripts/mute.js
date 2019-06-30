@@ -1,52 +1,69 @@
-var gMuteList = null
-chrome.storage.sync.get(null, muteList => {
-  gMuteList = muteList
-})
-
-var gTotalTime = 0
-var gFilterdResult = []
+getAllMuteList() //先に全件取得して変数に格納しておく
 
 var gObserver = new MutationObserver(() => {
-  if (gMuteList == null) {
-    chrome.storage.sync.get(null, muteList => {
-      gMuteList = muteList
-      filterResult(muteList)
-    })
-  } else {
-    filterResult(gMuteList)
-  }
+  getAllMuteList(muteList => {
+    let success = filterResult(muteList)
+    if (success === true) {
+      gObserver.disconnect() // 検索結果がまとまって送られてくる前提
+      hideFilterd()
+      printResult()
+    }
+  })
 })
-
-gObserver.observe(document.documentElement, {
+var observeOptions = {
   attributes: false,
   characterData: false,
   childList: true,
   subtree: true
-});
+}
+gObserver.observe(document.documentElement, observeOptions);
 
+var gFilterdResult = {}
 function filterResult(muteList) {
-  const startTime = performance.now()
-  let isChanged = false
+  let isFound = false
   let searchResultDiv = document.getElementsByClassName('g')
   Array.prototype.forEach.call(searchResultDiv, element => {
     let targetUrl = element.getElementsByTagName('a')[0].href
-    let targetDomain = targetUrl.match(/^https?:\/\/(.*?)(\/|\?|#|$)/)[1]
+    let targetDomain = extractDomain(targetUrl)
     if (muteList[targetDomain] != undefined) {
-      console.log('muted: ' + targetDomain);
-      // element.parentNode.removeChild(element)
-      element.style.display = 'none'
-      gFilterdResult.push(element)
-      isChanged = true
+      gFilterdResult[targetUrl] = element
+      isFound = true
     }
   })
-  const endTime = performance.now()
-  if (isChanged === true) {
-    gTotalTime += endTime - startTime
-    const resultStats = document.getElementById('resultStats')
-    if (resultStats !== null) {
-      gObserver.disconnect()
-      resultStats.innerHTML += '<a>&nbsp;muted ' + gFilterdResult.length + ' items' + '&nbsp;(' + (gTotalTime / 1000).toFixed(3) + 's)</a>'
+  return isFound
+}
+var gResultMesseage = null
+var gIsHidden = null
+function printResult() {
+  const gTotalTime = performance.now()
+  const resultStats = document.getElementById('resultStats')
+  if (resultStats !== null) {
+    if (gResultMesseage === null) {
+      gResultMesseage = resultStats.innerHTML
     }
+    const len = Object.keys(gFilterdResult).length
+    resultStats.innerHTML = gResultMesseage + 'muted&nbsp;' + len + '&nbsp;items&nbsp;(' + (gTotalTime / 1000).toFixed(3) + 's) click to show muted items'
+    resultStats.onclick = () => {
+      if (gIsHidden === false) {
+        hideFilterd()
+      } else if (gIsHidden === true) {
+        showFilterd()
+      }
+    }
+  }
+}
+function hideFilterd() {
+  for (let key of Object.keys(gFilterdResult)) {
+    gFilterdResult[key].style.display = 'none'
+    gIsHidden = true
+  }
+}
+function showFilterd() {
+  for (let key of Object.keys(gFilterdResult)) {
+    gFilterdResult[key].style.borderStyle = 'dashed'
+    gFilterdResult[key].style.borderColor = '#808080'
+    gFilterdResult[key].style.display = 'block'
+    gIsHidden = false
   }
 }
 

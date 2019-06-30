@@ -26,13 +26,13 @@
     "content_scripts": [
         {
             "matches": [ "https://www.google.com/search*" ],
-            "js": [ "scripts/mute.js" ],
+            "js": [ "scripts/common.js", "scripts/mute.js" ],
             "run_at": "document_start"
         }
     ],
 
     "background": {
-        "scripts": [ "scripts/background.js" ],
+        "scripts": [ "scripts/background.js", "scripts/common.js" ],
         "persistent": false
     },
 
