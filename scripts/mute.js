@@ -1,15 +1,18 @@
-getAllMuteList() //先に全件取得して変数に格納しておく
+var gMuteList = new MuteList()
 
+var gFilterdResultLength = 0
 var gObserver = new MutationObserver(() => {
-  getAllMuteList(muteList => {
-    let success = filterResult(muteList)
-    if (success === true) {
-      gObserver.disconnect() // 検索結果がまとまって送られてくる前提
-      hideFilterd()
-      printResult()
-    }
-  })
+  filterDomain()
+  const frl = Object.keys(gFilterdResult).length
+  if (frl !== gFilterdResultLength) {
+    gObserver.disconnect()
+    gFilterdResultLength = frl
+    hideFilterd()
+    printResult()
+    gObserver.observe(document.documentElement, observeOptions)
+  }
 })
+
 var observeOptions = {
   attributes: false,
   characterData: false,
@@ -19,18 +22,21 @@ var observeOptions = {
 gObserver.observe(document.documentElement, observeOptions);
 
 var gFilterdResult = {}
-function filterResult(muteList) {
-  let isFound = false
-  let searchResultDiv = document.getElementsByClassName('g')
-  Array.prototype.forEach.call(searchResultDiv, element => {
-    let targetUrl = element.getElementsByTagName('a')[0].href
-    let targetDomain = extractDomain(targetUrl)
-    if (muteList[targetDomain] != undefined) {
+function filterDomain() {
+  const searchResultDiv = document.getElementsByClassName('g')
+  for (let element of searchResultDiv) {
+    const targetUrl = element.getElementsByTagName('a')[0].href
+    const targetDomain = extractDomain(targetUrl)
+    gMuteList.getFromDomainList(targetDomain, term => {
+      element.style.display = 'none'
       gFilterdResult[targetUrl] = element
-      isFound = true
-    }
-  })
-  return isFound
+    })
+    const pageURL = extractPageURL(targetUrl)
+    gMuteList.getFromPageList(pageURL, term => {
+      element.style.display = 'none'
+      gFilterdResult[targetUrl] = element
+    })
+  }
 }
 var gResultMesseage = null
 var gIsHidden = null
