@@ -1,27 +1,28 @@
 chrome.storage.sync.get(null, items => {
   if (items.domain !== undefined) {
     for(let k of Object.keys(items.domain)) {
-      var row = document.createElement('tr')
+      let row = document.createElement('tr')
 
-      var target = document.createElement('td')
+      let target = document.createElement('td')
       target.textContent = k
       row.appendChild(target)
 
-      var term = document.createElement('td')
+      let term = document.createElement('td')
       // term.textContent = "&infin;"
       term.innerHTML = "&infin;"
       row.appendChild(term)
 
-      var remove = document.createElement('td')
-      // remove.textContent = "no way to remove"
-      remove.innerHTML = '<a href="">remove</a>'
-      remove.onclick = () => {
+      let remove = document.createElement('td')
+      let removeBtn = document.createElement('a')
+      removeBtn.textContent = 'remove'
+      removeBtn.className = 'waves-effect waves-light btn'
+      removeBtn.onclick = () => {
         delete items.domain[k]
         chrome.storage.sync.set(items, () => {
-          window.alert(k + "\nhas been removed")
           location.reload() // めんどいので
         })
       }
+      remove.appendChild(removeBtn)
       row.appendChild(remove)
 
       document.getElementById('domainList').appendChild(row)
@@ -30,27 +31,28 @@ chrome.storage.sync.get(null, items => {
 
   if (items.pageURL !== undefined) {
     for(let k of Object.keys(items.pageURL)) {
-      var row = document.createElement('tr')
+      let row = document.createElement('tr')
 
-      var target = document.createElement('td')
+      let target = document.createElement('td')
       target.textContent = k
       row.appendChild(target)
 
-      var term = document.createElement('td')
+      let term = document.createElement('td')
       // term.textContent = "&infin;"
       term.innerHTML = "&infin;"
       row.appendChild(term)
 
-      var remove = document.createElement('td')
-      // remove.textContent = "no way to remove"
-      remove.innerHTML = '<a href="">remove</a>'
-      remove.onclick = () => {
-        delete items.pageList[k]
+      let remove = document.createElement('td')
+      let removeBtn = document.createElement('a')
+      removeBtn.textContent = 'remove'
+      removeBtn.className = 'waves-effect waves-light btn'
+      removeBtn.onclick = () => {
+        delete items.pageURL[k]
         chrome.storage.sync.set(items, () => {
-          window.alert(k + "\nhas been removed")
           location.reload() // めんどいので
         })
       }
+      remove.appendChild(removeBtn)
       row.appendChild(remove)
 
       document.getElementById('pageList').appendChild(row)

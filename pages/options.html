@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="../scripts/options.js"></script>
+    <link type="text/css" rel="stylesheet" href="materialize.min.css"  media="screen,projection"/>
     <title>MuteResult</title>
   </head>
 
-  <body>
-    <h1>Options</h1>
-    <h2>domain</h2>
-    <table id="domainList">
-      <tr>
-        <th>target</th><th>term</th><th>remove</th>
-      </tr>
-    </table>
-    <h2>page</h2>
-    <table id="pageList">
-      <tr>
-        <th>target</th><th>term</th><th>remove</th>
-      </tr>
-    </table>
+  <body style="font-size: 22px">
+    <div class="row">
+      <nav>
+        <div class="nav-wrapper teal lighten-2">
+          <span class="brand-logo">MuteResult Options</span>
+        </div>
+      </nav>
+      <div class="card col s10">
+        <div class="card-content">
+          <span class="card-title">domain</span>
+          <table>
+            <thead>
+              <tr>
+                <th>target</th><th>term</th><th>remove</th>
+              </tr>
+            </thead>
+            <tbody id="domainList">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card col s10">
+        <div class="card-content">
+          <span class="card-title">page</span>
+          <table>
+            <thead>
+              <tr>
+                <th>target</th><th>term</th><th>remove</th>
+              </tr>
+            </thead>
+            <tbody id="pageList">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="materialize.min.js"></script>
+    <script type="text/javascript" src="../scripts/options.js"></script>
   </body>
 </html>
