@@ -1,3 +1,10 @@
+function getYMD(dt) {
+  const y = dt.getFullYear();
+  const m = ("00" + (dt.getMonth()+1)).slice(-2);
+  const d = ("00" + dt.getDate()).slice(-2);
+  return y + "/" + m + "/" + d;
+}
+
 chrome.storage.sync.get(null, items => {
   if (items.domain !== undefined) {
     for(let k of Object.keys(items.domain)) {
@@ -8,8 +15,24 @@ chrome.storage.sync.get(null, items => {
       row.appendChild(target)
 
       let term = document.createElement('td')
-      // term.textContent = "&infin;"
-      term.innerHTML = "&infin;"
+      let termBtn = document.createElement('a')
+      if (items.domain[k] === -1) {
+        term.innerHTML = "<span>&infin;&nbsp;</span>"
+        termBtn.textContent = 'a month'
+      } else {
+        term.innerHTML = "<span>" + getYMD(new Date(items.domain[k])) + "&nbsp;</span>"
+        termBtn.textContent = 'extend a month'
+      }
+      termBtn.className = 'waves-effect waves-light btn'
+      termBtn.onclick = () => {
+        const date = items.domain[k] === -1 ? new Date() : new Date(items.domain[k])
+        date.setMonth(date.getMonth() + 1)
+        items.domain[k] = date.getTime()
+        chrome.storage.sync.set(items, () => {
+          location.reload() // めんどいので
+        })
+      }
+      term.appendChild(termBtn)
       row.appendChild(term)
 
       let remove = document.createElement('td')
