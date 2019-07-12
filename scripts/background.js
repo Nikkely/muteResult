@@ -28,3 +28,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     (new MuteList()).setDomain(domain, -1)
   }
 });
+
+chrome.browserAction.onClicked.addListener(tab => {
+    chrome.tabs.create({
+        'url': chrome.extension.getURL('pages/options.html')
+    }, tab => {
+
+    });
+});
