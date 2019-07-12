@@ -1,30 +1,48 @@
 var gMuteList = new MuteList()
 
 var gFilterdResultLength = 0
-var gObserver = new MutationObserver(() => {
-  filterDomain()
-  const frl = Object.keys(gFilterdResult).length
-  if (frl !== gFilterdResultLength) {
-    gObserver.disconnect()
-    gFilterdResultLength = frl
-    hideFilterd()
-    printResult()
-    gObserver.observe(document.documentElement, observeOptions)
-  }
-})
-
+// var gObserver = new MutationObserver(() => {
+//   filterDomain()
+//   const frl = Object.keys(gFilterdResult).length
+//   if (frl !== gFilterdResultLength) {
+//     gObserver.disconnect()
+//     gFilterdResultLength = frl
+//     hideFilterd()
+//     printResult()
+//     gObserver.observe(document.documentElement, observeOptions)
+//   }
+// })
+//
 var observeOptions = {
   attributes: false,
   characterData: false,
   childList: true,
   subtree: true
 }
-gObserver.observe(document.documentElement, observeOptions);
+// gObserver.observe(document.documentElement, observeOptions);
+
+document.addEventListener("DOMContentLoaded", e => {
+  let observer = new MutationObserver(() => {
+    filterDomain()
+    const frl = Object.keys(gFilterdResult).length
+    if (frl !== gFilterdResultLength) {
+      observer.disconnect()
+      gFilterdResultLength = frl
+      hideFilterd()
+      printResult()
+      observer.observe(document.documentElement, observeOptions)
+    }
+  })
+  observer.observe(document.documentElement, observeOptions)
+})
 
 var gFilterdResult = {}
 function filterDomain() {
-  const searchResultDiv = document.getElementsByClassName('g')
-  for (let element of searchResultDiv) {
+  const searchResultsDiv = document.getElementsByClassName('srg')[0] // 検索結果群
+  if (!searchResultsDiv) return
+
+  const searchResultDivs = searchResultsDiv.getElementsByClassName('g')
+  for (let element of searchResultDivs) {
     const targetUrl = element.getElementsByTagName('a')[0].href
     const targetDomain = extractDomain(targetUrl)
     gMuteList.getFromDomainList(targetDomain, term => {
