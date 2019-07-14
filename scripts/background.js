@@ -3,14 +3,14 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'このページをミュートする',
     id: 'pageMute',
     type: 'normal',
-    contexts: ["link"]
+    contexts: ["page", "link"]
   });
 
   chrome.contextMenus.create({
     title: 'このドメインをミュートする',
     id: 'domainMute',
     type: 'normal',
-    contexts: ["all"]
+    contexts: ["page", "link"]
   });
 });
 

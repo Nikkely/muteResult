@@ -11,7 +11,9 @@ chrome.storage.sync.get(null, items => {
       let row = document.createElement('tr')
 
       let target = document.createElement('td')
-      target.textContent = k
+      const faviconApi = 'http://www.google.com/s2/favicons?domain=' + k
+      const k_ = k.length <= 30 ? k : k.slice(0, 27) + '...'
+      target.innerHTML = '<img src="' + faviconApi + '" width="16" height="16"/><a href="' + k + '" target="_blank"> ' + k_ + '</a>'
       row.appendChild(target)
 
       let term = document.createElement('td')
@@ -57,7 +59,9 @@ chrome.storage.sync.get(null, items => {
       let row = document.createElement('tr')
 
       let target = document.createElement('td')
-      target.textContent = k
+      const faviconApi = 'http://www.google.com/s2/favicons?domain=' + k
+      const k_ = k.length <= 30 ? k : k.slice(0, 27) + '...'
+      target.innerHTML = '<img src="' + faviconApi + '" width="16" height="16"/><a href="' + k + '" target="_blank"> ' + k_ + '</a>'
       row.appendChild(target)
 
       let term = document.createElement('td')

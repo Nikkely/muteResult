@@ -1,25 +1,12 @@
 var gMuteList = new MuteList()
 
 var gFilterdResultLength = 0
-// var gObserver = new MutationObserver(() => {
-//   filterDomain()
-//   const frl = Object.keys(gFilterdResult).length
-//   if (frl !== gFilterdResultLength) {
-//     gObserver.disconnect()
-//     gFilterdResultLength = frl
-//     hideFilterd()
-//     printResult()
-//     gObserver.observe(document.documentElement, observeOptions)
-//   }
-// })
-//
 var observeOptions = {
   attributes: false,
   characterData: false,
   childList: true,
   subtree: true
 }
-// gObserver.observe(document.documentElement, observeOptions);
 
 document.addEventListener("DOMContentLoaded", e => {
   let observer = new MutationObserver(() => {
@@ -90,24 +77,3 @@ function showFilterd() {
     gIsHidden = false
   }
 }
-
-// document.addEventListener("DOMContentLoaded", e => {
-//   var observer = new MutationObserver(() => {
-//     if (gMuteList == null) {
-//       chrome.storage.sync.get(null, muteList => {
-//         gMuteList = muteList
-//         filterResult(muteList)
-//       })
-//     } else {
-//       console.log('use cache');
-//       filterResult(gMuteList)
-//     }
-//   })
-//
-//   observer.observe(document.documentElement, {
-//     // attributes: true,
-//     // characterData: true,
-//     childList: true,
-//     subtree: true
-//   });
-// })

@@ -2,7 +2,7 @@
 function extractDomain(url) {
   let domain = null
   try {
-    domain = url.match(/^https?:\/\/(.*?)(\/|\?|#|$)/)[1]
+    domain = url.match(/^https?:\/\/(.*?)(\/|\?|#|$)/)[0]
   } catch(e) {
     console.error('failed to extract domain from url=' + url);
     console.error(e);
@@ -13,7 +13,7 @@ function extractDomain(url) {
 function extractPageURL(url) { // フラグメント、クエリは除く
   let pageURL = null
   try {
-    pageURL = url.match(/^https?:\/\/(.*?)(\?|#|$)/)[1]
+    pageURL = url.match(/^https?:\/\/(.*?)(\?|#|$)/)[0]
   } catch(e) {
     console.error('failed to extract page url=' + url);
     console.error(e);
